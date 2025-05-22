@@ -5,6 +5,7 @@ import './style.css';
 import hamburger from './images/hamburger.svg';
 import odinLogo from './images/odinLogo.png';
 
+
 const odinLogoImg = document.createElement('img');
 odinLogoImg.src = odinLogo;
 odinLogoImg.id = 'odinLogoID';

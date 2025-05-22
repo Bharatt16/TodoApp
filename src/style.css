@@ -49,3 +49,60 @@ button{
     padding : 1rem;
     font-size: 1.2rem;
 }
+
+main{
+    text-align: center;
+}
+
+#hamburgerMenu hr {
+    border: none;
+    height: 1px;
+    background-color: rgba(10, 9, 9, 0.664);
+    margin: 1rem 0;
+    width: 100%;
+}
+  
+#project-list li {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-bottom: 1px dashed #ccc;
+}
+  
+#project-list li:hover {
+    background-color: #f9f9f9;
+}
+.hidden{
+    /* display : none; */
+    position: relative;
+    z-index: 3;
+}  
+
+#menu-list{
+    background-color: lightcoral;
+    width: 17vw;
+    height: 40rem;
+    position: absolute;
+    top: -93px;
+    left: 10px;
+    border-radius: 1rem;
+    display : flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem;
+}
+#menu-list li{
+    gap : 1rem;
+    /* margin: 1.5rem; */
+    list-style: none;
+    font-size: 1.7rem;
+    transition: .1s ease-in;
+    cursor : pointer
+}
+
+#menu-list li:hover{
+    transform : scale(1.1);
+    letter-spacing: 5px;
+    /* border : 1px solid rgb(68, 67, 67); */
+}
+
+
