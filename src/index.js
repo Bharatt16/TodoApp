@@ -3,9 +3,17 @@ import { CreateProject} from './project';
 import { renderTodos , setupEventListener} from './dom';
 import './style.css';
 import hamburger from './images/hamburger.svg';
+import odinLogo from './images/odinLogo.png';
+
+const odinLogoImg = document.createElement('img');
+odinLogoImg.src = odinLogo;
+odinLogoImg.id = 'odinLogoID';
+document.querySelector('.odin').prepend(odinLogoImg);
 
 const hamburgerImg = document.createElement('img');
 hamburgerImg.src = hamburger;
+hamburgerImg.id = 'hamburgerID';
+// hamburgerImg.classList.add('hamburgerID');
 document.querySelector('.leftNavContainer').prepend(hamburgerImg);
 
 const myproject = new CreateProject('My project');
