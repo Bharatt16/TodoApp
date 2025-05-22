@@ -1,6 +1,12 @@
 import { CreateTodo} from './todo';
 import { CreateProject} from './project';
+import { renderTodos , setupEventListener} from './dom';
 import './style.css';
+import hamburger from './images/hamburger.svg';
+
+const hamburgerImg = document.createElement('img');
+hamburgerImg.src = hamburger;
+document.querySelector('.leftNavContainer').prepend(hamburgerImg);
 
 const myproject = new CreateProject('My project');
 
@@ -16,3 +22,8 @@ console.log(myproject.getPendingTodos());
 
 t1.toggleComplete()
 console.log('Completed todos:', myproject.getCompletedTodos());
+
+
+// Render UI
+renderTodos(myproject);
+setupEventListener(myproject);
