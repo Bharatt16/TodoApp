@@ -41,8 +41,17 @@ function setupEventListener(project) {
     });
   }
 
+function toggleHamburger(crossImg , hamburgerImg){
+    crossImg.addEventListener('click', ()=>{
+          document.querySelector('#hamburgerMenu').style.display = 'none';
+    });
+    hamburgerImg.addEventListener('click', ()=>{
+         document.querySelector('#hamburgerMenu').style.display = 'block';
+    })
+} 
 
 
 
 
-export { renderTodos, setupEventListener };
+
+export { renderTodos, setupEventListener, toggleHamburger };

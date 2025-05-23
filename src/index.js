@@ -1,10 +1,15 @@
 import { CreateTodo} from './todo';
 import { CreateProject} from './project';
-import { renderTodos , setupEventListener} from './dom';
+import { renderTodos , setupEventListener, toggleHamburger } from './dom';
 import './style.css';
 import hamburger from './images/hamburger.svg';
 import odinLogo from './images/odinLogo.png';
+import cross from './images/cross.svg';
 
+const crossImg = document.createElement('img');
+crossImg.src  = cross;
+crossImg.id = 'crossID';
+document.querySelector('#hamburgerMenu').prepend(crossImg);
 
 const odinLogoImg = document.createElement('img');
 odinLogoImg.src = odinLogo;
@@ -16,6 +21,8 @@ hamburgerImg.src = hamburger;
 hamburgerImg.id = 'hamburgerID';
 // hamburgerImg.classList.add('hamburgerID');
 document.querySelector('.leftNavContainer').prepend(hamburgerImg);
+
+toggleHamburger(crossImg, hamburgerImg);
 
 const myproject = new CreateProject('My project');
 
