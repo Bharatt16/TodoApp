@@ -1,45 +1,84 @@
 import { CreateTodo} from './todo';
 import { CreateProject} from './project';
-import { renderTodos , setupEventListener, toggleHamburger } from './dom';
+import { renderTodos, setupEventListener, toggleHamburger , loadHome , loadThisWeek , loadUpcoming , loadOverDue , loadCompleted } from './dom';
 import './style.css';
 import hamburger from './images/hamburger.svg';
 import odinLogo from './images/odinLogo.png';
 import cross from './images/cross.svg';
 
-const crossImg = document.createElement('img');
-crossImg.src  = cross;
-crossImg.id = 'crossID';
-document.querySelector('#hamburgerMenu').prepend(crossImg);
+document.addEventListener('DOMContentLoaded', () => {
+    const crossImg = document.createElement('img');
+    crossImg.src  = cross;
+    crossImg.id = 'crossID';
+    document.querySelector('#hamburgerMenu').prepend(crossImg);
 
-const odinLogoImg = document.createElement('img');
-odinLogoImg.src = odinLogo;
-odinLogoImg.id = 'odinLogoID';
-document.querySelector('.odin').prepend(odinLogoImg);
+    const odinLogoImg = document.createElement('img');
+    odinLogoImg.src = odinLogo;
+    odinLogoImg.id = 'odinLogoID';
+    document.querySelector('.odin').prepend(odinLogoImg);
 
-const hamburgerImg = document.createElement('img');
-hamburgerImg.src = hamburger;
-hamburgerImg.id = 'hamburgerID';
-// hamburgerImg.classList.add('hamburgerID');
-document.querySelector('.leftNavContainer').prepend(hamburgerImg);
+    const hamburgerImg = document.createElement('img');
+    hamburgerImg.src = hamburger;
+    hamburgerImg.id = 'hamburgerID';
+    document.querySelector('.leftNavContainer').prepend(hamburgerImg);
 
-toggleHamburger(crossImg, hamburgerImg);
+    toggleHamburger(crossImg, hamburgerImg);
 
-const myproject = new CreateProject('My project');
+    const myproject = new CreateProject('My project');
 
-const t1 = new CreateTodo('Buy groceries', 'Milk, eggs, bread', '2025-05-25', 'high');
-const t2 = new CreateTodo('Do laundry', '', '2025-05-22', 'medium');
+    const t1 = new CreateTodo('Buy groceries', 'Milk, eggs, bread', '2025-05-25', 'high');
+    const t2 = new CreateTodo('Do laundry', '', '2025-05-22', 'medium');
 
+    myproject.addTodo(t1);
+    myproject.addTodo(t2);
 
-myproject.addTodo(t1);
-myproject.addTodo(t2);
+    console.log(myproject.todos);
+    console.log(myproject.getPendingTodos());
 
-console.log(myproject.todos);
-console.log(myproject.getPendingTodos());
+    t1.toggleComplete()
+    console.log('Completed todos:', myproject.getCompletedTodos());
 
-t1.toggleComplete()
-console.log('Completed todos:', myproject.getCompletedTodos());
+    // Render UI
+    renderTodos(myproject);
+    setupEventListener(myproject);
 
+    document.querySelector('#nav-home').addEventListener('click', () => {
+        clearContent();
+        loadHome();
+        document.getElementById('hamburgerMenu').style.display = 'none';
 
-// Render UI
-renderTodos(myproject);
-setupEventListener(myproject);
+    });
+
+    document.querySelector('#nav-week').addEventListener('click', () => {
+        clearContent();
+        loadThisWeek();
+        document.getElementById('hamburgerMenu').style.display = 'none';
+
+    });
+    document.querySelector('#nav-upcoming').addEventListener('click', () => {
+        clearContent();
+        loadUpcoming();
+        document.getElementById('hamburgerMenu').style.display = 'none';
+
+    });
+    document.querySelector('#nav-overdue').addEventListener('click', () => {
+        clearContent();
+        loadOverDue();
+        document.getElementById('hamburgerMenu').style.display = 'none';
+
+    });
+    document.querySelector('#nav-completed').addEventListener('click', () => {
+        clearContent();
+        loadCompleted();
+        document.getElementById('hamburgerMenu').style.display = 'none';
+
+    });
+
+    // Initial load
+    console.log("initial log");
+    loadHome();
+});
+
+export default function clearContent(){
+    document.getElementById('content').innerHTML = '';
+}
