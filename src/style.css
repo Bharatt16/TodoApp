@@ -366,3 +366,76 @@ body.dark-theme #projectDialog button[type="button"]:hover {
     background-color: #505050;
 }
 
+.project-section {
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.project-section h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+#project-list {
+    list-style: none;
+    padding: 0;
+}
+
+#project-list li {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-bottom: 1px dashed #ccc;
+    transition: background-color 0.2s;
+}
+
+#project-list li:hover {
+    background-color: #f0f0f0;
+}
+
+#todo-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+#todo-list li {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#todo-list li:hover {
+    background-color: #f0f0f0;
+}
+
+#project-title {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* Dark theme styles */
+body.dark-theme .project-section h3,
+body.dark-theme #project-title {
+    color: #ffffff;
+}
+
+body.dark-theme #project-list li {
+    border-bottom-color: #404040;
+}
+
+body.dark-theme #project-list li:hover {
+    background-color: #404040;
+}
+
+body.dark-theme #todo-list li {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+body.dark-theme #todo-list li:hover {
+    background-color: #404040;
+}
+

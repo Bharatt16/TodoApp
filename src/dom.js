@@ -1,11 +1,9 @@
 import { CreateTodo } from './todo.js';
+import { CreateProject, addProject, getAllProjects } from './project.js';
 import sun from './images/sun.svg';
 import night from './images/night.svg';
 
-
 let currentProject = null;
-
-
 
 function toggleTheme(){
     const rightNav = document.querySelector('.rightNavContainer');
@@ -39,9 +37,6 @@ function toggleTheme(){
     });
 }
 
-
-
-
 function renderTodos(project){
     currentProject = project;
     const list = document.getElementById('todo-list');
@@ -72,46 +67,72 @@ function renderTodos(project){
     });
 }
 
-
-function setupEventListener(project) {
-
+function updateProjectList() {
+    const projectList = document.getElementById('project-list');
+    projectList.innerHTML = '';
     
-    document.querySelector('#navbtn-1').addEventListener('click', ()=>{
-        document.querySelector('#projectDialog').showModal();
-   })
-     
-   document.querySelector('#projectcancelBtn').addEventListener("click", () => {
-    document.querySelector('#projectDialog').close();
-    document.getElementById('projectName').value = '';
-    
-  });
-
-    document.querySelector('#navbtn-2').addEventListener('click', ()=>{
-        document.querySelector('#todoDialog').showModal();
-   })
-   document.querySelector('#cancelBtn').addEventListener("click", () => {
-       document.querySelector('#todoDialog').close();
-       document.getElementById('title').value = '';
-       document.getElementById('description').value = '';
-       document.getElementById('dueDate').value = '';
-       document.getElementById('priority').value = '';
-     });
-  }
-
-function toggleHamburger(crossImg , hamburgerImg){
-    crossImg.addEventListener('click', ()=>{
-          document.querySelector('#hamburgerMenu').style.display = 'none';
+    getAllProjects().forEach((project, index) => {
+        const li = document.createElement('li');
+        li.textContent = project.name;
+        li.style.cursor = 'pointer';
+        li.style.padding = '8px 10px';
+        li.style.borderBottom = '1px dashed #ccc';
+        
+        li.addEventListener('click', () => {
+            renderTodos(project);
+        });
+        
+        projectList.appendChild(li);
     });
-    hamburgerImg.addEventListener('click', ()=>{
-         document.querySelector('#hamburgerMenu').style.display = 'block';
-         
-    })
-} 
+}
+
+function setupEventListener() {
+    // Project dialog event listeners
+    document.querySelector('#navbtn-1').addEventListener('click', () => {
+        document.querySelector('#projectDialog').showModal();
+    });
+    
+    document.querySelector('#projectDialog form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const projectName = document.getElementById('projectName').value;
+        if (projectName) {
+            addProject(projectName);
+            updateProjectList();
+            document.querySelector('#projectDialog').close();
+            document.getElementById('projectName').value = '';
+        }
+    });
+    
+    document.querySelector('#projectcancelBtn').addEventListener("click", () => {
+        document.querySelector('#projectDialog').close();
+        document.getElementById('projectName').value = '';
+    });
+
+    // Todo dialog event listeners
+    document.querySelector('#navbtn-2').addEventListener('click', () => {
+        document.querySelector('#todoDialog').showModal();
+    });
+    
+    document.querySelector('#cancelBtn').addEventListener("click", () => {
+        document.querySelector('#todoDialog').close();
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('dueDate').value = '';
+        document.getElementById('priority').value = '';
+    });
+}
+
+function toggleHamburger(crossImg, hamburgerImg){
+    crossImg.addEventListener('click', () => {
+        document.querySelector('#hamburgerMenu').style.display = 'none';
+    });
+    hamburgerImg.addEventListener('click', () => {
+        document.querySelector('#hamburgerMenu').style.display = 'block';
+    });
+}
 
 function loadHome(){
-  console.log("load home unctionn called")
     const content = document.getElementById('content');
-    console.log('content element : ', content);
     content.innerHTML = `
         <div style="text-align: center; padding: 2rem;">
             <h1>Home Page</h1>
@@ -129,6 +150,7 @@ function loadThisWeek(){
         </div>
     `;
 }
+
 function loadUpcoming(){
     const content = document.getElementById('content');
     content.innerHTML = `
@@ -138,6 +160,7 @@ function loadUpcoming(){
         </div>
     `;
 }
+
 function loadOverDue(){
     const content = document.getElementById('content');
     content.innerHTML = `
@@ -147,6 +170,7 @@ function loadOverDue(){
         </div>
     `;
 }
+
 function loadCompleted(){
     const content = document.getElementById('content');
     content.innerHTML = `

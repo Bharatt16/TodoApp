@@ -29,13 +29,19 @@
             <li id="nav-completed">Completed</li>
             <hr />
            </ul>
-           <ul id="project-list">
-
-           </ul>
+           <div class="project-section">
+               <h3>Projects</h3>
+               <ul id="project-list">
+               </ul>
+           </div>
       </div>
 
       <main>
-           <div id="content"></div>
+           <div id="content">
+               <h2 id="project-title">Select a Project</h2>
+               <ul id="todo-list">
+               </ul>
+           </div>
       </main>
 
 
@@ -59,6 +65,12 @@
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
+                    </select>
+               </div>
+               <div class="projectClass">
+                    <label for="projectSelect">Select Project</label>
+                    <select id="projectSelect" required>
+                        <option value="">Choose a project</option>
                     </select>
                </div>
                <div class="buttonClass">
