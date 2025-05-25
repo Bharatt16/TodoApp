@@ -59,3 +59,11 @@ export function deleteProject(index){
 export function getAlltodos(){
     return projects.flatMap(project => project.todos);
 }
+
+export function createProjectFromForm(formData){
+    const name = formData.get('projectName');
+  
+    
+    // Create and return new project
+    return new CreateProject(name);
+}

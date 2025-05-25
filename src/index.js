@@ -87,3 +87,27 @@ export default function clearContent(){
     document.getElementById('content').innerHTML = '';
 }
 
+
+
+
+
+
+const todos = [
+    {
+        id: 1,
+        title: "Complete project",
+        description: "Finish the todo app project",
+        dueDate: "2024-03-20",
+        priority: "High"
+    },
+    {
+        id: 2,
+        title: "Review code",
+        description: "Review the latest changes",
+        dueDate: "2024-03-21",
+        priority: "Medium"
+    }
+];
+
+loadHome(todos);
+

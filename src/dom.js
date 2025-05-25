@@ -1,5 +1,5 @@
 import { CreateTodo } from './todo.js';
-import { CreateProject, addProject, getAllProjects } from './project.js';
+import { CreateProject, addProject, getAllProjects, createProjectFromForm } from './project.js';
 import sun from './images/sun.svg';
 import night from './images/night.svg';
 
@@ -36,6 +36,7 @@ function toggleTheme(){
         document.body.classList.remove('dark-theme');
     });
 }
+
 
 function renderTodos(project){
     currentProject = project;
@@ -94,12 +95,16 @@ function setupEventListener() {
     
     document.querySelector('#projectDialog form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const projectName = document.getElementById('projectName').value;
-        if (projectName) {
-            addProject(projectName);
+        const formData = new FormData(e.target);
+        try {
+            const project = createProjectFromForm(formData);
             updateProjectList();
             document.querySelector('#projectDialog').close();
             document.getElementById('projectName').value = '';
+            // Optionally render the new project's todos
+            renderTodos(project);
+        } catch (error) {
+            alert(error.message);
         }
     });
     
@@ -136,9 +141,32 @@ function loadHome(){
     content.innerHTML = `
         <div style="text-align: center; padding: 2rem;">
             <h1>Home Page</h1>
-            <p>This is the home page content</p>
+            <div class="todo-list-container">
+                ${todos.map(todo => `
+                    <div class="todo-item" data-id="${todo.id}">
+                        <div class="todo-content">
+                            <h3 class="todo-title">${todo.title}</h3>
+                            <p class="todo-description">${todo.description || ''}</p>
+                        </div>
+                        <div class="todo-meta">
+                            <span class="todo-date">${todo.dueDate || 'No due date'}</span>
+                            <span class="todo-priority ${todo.priority?.toLowerCase() || 'normal'}">${todo.priority || 'Normal'}</span>
+                            <button class="todo-details-btn">Details</button>
+                        </div>
+                    </div>
+                `).join('') || '<p class="no-todos">No todos yet. Add some!</p>'}
         </div>
     `;
+
+
+        // Add event listeners for detail buttons
+        document.querySelectorAll('.todo-details-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const todoId = e.target.closest('.todo-item').dataset.id;
+                // Handle todo details click
+                console.log('Todo details clicked:', todoId);
+            });
+        });
 }
 
 function loadThisWeek(){
