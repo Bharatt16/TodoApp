@@ -1,6 +1,46 @@
 import { CreateTodo } from './todo.js';
+import sun from './images/sun.svg';
+import night from './images/night.svg';
+
 
 let currentProject = null;
+
+
+
+function toggleTheme(){
+    const rightNav = document.querySelector('.rightNavContainer');
+    
+    // Create both images
+    const nightImg = document.createElement('img');
+    nightImg.src = night;
+    nightImg.id = 'night';
+    nightImg.style.cursor = 'pointer';
+    
+    const sunImg = document.createElement('img');
+    sunImg.src = sun;
+    sunImg.id = 'sun';
+    sunImg.style.cursor = 'pointer';
+    
+    // Add night image initially
+    rightNav.prepend(nightImg);
+    
+    // Add click event to night image
+    nightImg.addEventListener('click', () => {
+        nightImg.remove();
+        rightNav.prepend(sunImg);
+        document.body.classList.add('dark-theme');
+    });
+    
+    // Add click event to sun image
+    sunImg.addEventListener('click', () => {
+        sunImg.remove();
+        rightNav.prepend(nightImg);
+        document.body.classList.remove('dark-theme');
+    });
+}
+
+
+
 
 function renderTodos(project){
     currentProject = project;
@@ -34,16 +74,28 @@ function renderTodos(project){
 
 
 function setupEventListener(project) {
-    document.getElementById('navbtn-2').addEventListener('click', () => {
-      const title = prompt('Todo Title:');
-      const dueDate = prompt('Due Date:');
-  
-      if (title && dueDate) {
-        const todo = new CreateTodo(title, '', dueDate, 'medium');
-        project.addTodo(todo);
-        renderTodos(project);
-      }
-    });
+
+    
+    document.querySelector('#navbtn-1').addEventListener('click', ()=>{
+        document.querySelector('#projectDialog').showModal();
+   })
+     
+   document.querySelector('#projectcancelBtn').addEventListener("click", () => {
+    document.querySelector('#projectDialog').close();
+    document.getElementById('projectName').value = '';
+    
+  });
+
+    document.querySelector('#navbtn-2').addEventListener('click', ()=>{
+        document.querySelector('#todoDialog').showModal();
+   })
+   document.querySelector('#cancelBtn').addEventListener("click", () => {
+       document.querySelector('#todoDialog').close();
+       document.getElementById('title').value = '';
+       document.getElementById('description').value = '';
+       document.getElementById('dueDate').value = '';
+       document.getElementById('priority').value = '';
+     });
   }
 
 function toggleHamburger(crossImg , hamburgerImg){
@@ -52,6 +104,7 @@ function toggleHamburger(crossImg , hamburgerImg){
     });
     hamburgerImg.addEventListener('click', ()=>{
          document.querySelector('#hamburgerMenu').style.display = 'block';
+         
     })
 } 
 
@@ -111,4 +164,4 @@ function loadCompleted(){
 
 
 
-export { renderTodos, setupEventListener, toggleHamburger , loadHome , loadThisWeek , loadUpcoming , loadOverDue , loadCompleted };
+export { renderTodos, setupEventListener, toggleHamburger, loadHome, loadThisWeek, loadUpcoming, loadOverDue, loadCompleted, toggleTheme };

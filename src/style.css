@@ -15,6 +15,22 @@ nav{
     padding : 1rem;
 }
 
+.rightNavContainer{
+    display : flex;
+    justify-content: center;
+    align-items: center;
+    gap : 1rem;
+}
+
+img#night , img#sun {
+    height: 2rem;
+    transition: transform 0.2s ease;
+}
+
+img#night:hover, img#sun:hover {
+    transform: scale(1.1);
+}
+
 #hamburgerID{
     height : 2rem;
     transition : .1s ease-in;
@@ -124,74 +140,229 @@ main{
 }
 
 
-
-    #content {
-        width: 100%;
+#content {
         height: 100vh;
         background-color: aquamarine;
         border: 2px solid black;
-    }
+        margin: 1rem;
+}
 
-#main-content {
-    width: 100%;
-    min-height: calc(100vh - 100px); /* Subtract header height */
+#todoDialog {
     padding: 2rem;
-    background-color: #f5f5f5;
-    margin-top: 1rem;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 90%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
 }
 
-#main-content h1 {
-    color: #2c3e50;
-    margin-bottom: 1rem;
+#description{
+    height : 5rem;
 }
 
-#main-content p {
-    color: #7f8c8d;
-    font-size: 1.2rem;
+#todoDialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.todos-list {
-    max-width: 800px;
-    margin: 2rem auto;
+#todoDialog form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.todo-item {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: left;
+#todoDialog .titleClass,
+#todoDialog .descriptionClass,
+#todoDialog .dueDateClass,
+#todoDialog .priorityClass {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.todo-item h3 {
-    margin: 0 0 0.5rem 0;
-    color: #2c3e50;
+#todoDialog label {
+    font-weight: 600;
+    color: #333;
 }
 
-.todo-item p {
-    margin: 0.5rem 0;
-    color: #7f8c8d;
-}
-
-.todo-item.completed h3 {
-    text-decoration: line-through;
-    color: #95a5a6;
-}
-
-.todo-item button {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
+#todoDialog input,
+#todoDialog select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: background 0.3s ease;
+    font-size: 1rem;
 }
 
-.todo-item button:hover {
-    background: #2980b9;
+#todoDialog input:focus,
+#todoDialog select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
+
+#todoDialog .buttonClass {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+#todoDialog button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#todoDialog button[type="submit"] {
+    background-color: #4a90e2;
+    color: white;
+}
+
+#todoDialog button[type="submit"]:hover {
+    background-color: #357abd;
+}
+
+#todoDialog button[type="button"] {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+#todoDialog button[type="button"]:hover {
+    background-color: #d0d0d0;
+}
+
+#projectDialog {
+    padding: 2rem;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 90%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+#projectDialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#projectDialog form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#projectDialog label {
+    font-weight: 600;
+    color: #333;
+}
+
+#projectDialog input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+#projectDialog input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+#projectDialog .buttonClass {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+#projectDialog button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#projectDialog button[type="submit"] {
+    background-color: #4a90e2;
+    color: white;
+}
+
+#projectDialog button[type="submit"]:hover {
+    background-color: #357abd;
+}
+
+#projectDialog button[type="button"] {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+#projectDialog button[type="button"]:hover {
+    background-color: #d0d0d0;
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+body.dark-theme nav {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+body.dark-theme #content {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+body.dark-theme #menu-list {
+    background-color: #2d2d2d;
+}
+
+body.dark-theme #menu-list li:hover {
+    background-color: #404040;
+}
+
+body.dark-theme #todoDialog,
+body.dark-theme #projectDialog {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+body.dark-theme #todoDialog input,
+body.dark-theme #todoDialog select,
+body.dark-theme #projectDialog input {
+    background-color: #404040;
+    color: #ffffff;
+    border-color: #505050;
+}
+
+body.dark-theme #todoDialog label,
+body.dark-theme #projectDialog label {
+    color: #ffffff;
+}
+
+body.dark-theme #todoDialog button[type="button"],
+body.dark-theme #projectDialog button[type="button"] {
+    background-color: #404040;
+    color: #ffffff;
+}
+
+body.dark-theme #todoDialog button[type="button"]:hover,
+body.dark-theme #projectDialog button[type="button"]:hover {
+    background-color: #505050;
+}
+

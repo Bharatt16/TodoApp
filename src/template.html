@@ -37,5 +37,51 @@
       <main>
            <div id="content"></div>
       </main>
+
+
+      <dialog id="todoDialog">
+          <form method="dialog">
+               <div class="titleClass">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" placeholder="Title" required>
+               </div>
+               <div class="descriptionClass">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" placeholder="Description here .." required>
+               </div>
+               <div class="dueDateClass">
+                    <label for="dueDate">Due Date</label>
+                    <input type="date" id="dueDate"  required>
+               </div>
+               <div class="priorityClass">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+               </div>
+               <div class="buttonClass">
+                    <button type="submit">Submit</button>
+                    <button type="button" id="cancelBtn">Cancel</button>
+               </div>
+          </form>
+      </dialog>
+
+
+     
+      <dialog id="projectDialog">
+          <form method="dialog">
+               <label for="projectName">Project Name</label>
+               <input type="text" id="projectName" placeholder="Project Name" required>
+               <div class="buttonClass">
+                    <button type="submit">Submit</button>
+                    <button type="button" id="projectcancelBtn">Cancel</button>
+               </div>
+          </form>
+      </dialog>
+
+     
+
 </body>
 </html>

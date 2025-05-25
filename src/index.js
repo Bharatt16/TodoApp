@@ -1,12 +1,18 @@
 import { CreateTodo} from './todo';
 import { CreateProject} from './project';
-import { renderTodos, setupEventListener, toggleHamburger , loadHome , loadThisWeek , loadUpcoming , loadOverDue , loadCompleted } from './dom';
+import { renderTodos, setupEventListener, toggleHamburger , loadHome , loadThisWeek , loadUpcoming , loadOverDue , loadCompleted, toggleTheme } from './dom';
 import './style.css';
 import hamburger from './images/hamburger.svg';
 import odinLogo from './images/odinLogo.png';
 import cross from './images/cross.svg';
+import night from './images/night.svg';
+import sun from './images/sun.svg';
+
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize theme toggle first
+    toggleTheme();
+
     const crossImg = document.createElement('img');
     crossImg.src  = cross;
     crossImg.id = 'crossID';
@@ -32,8 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     myproject.addTodo(t1);
     myproject.addTodo(t2);
 
-    console.log(myproject.todos);
-    console.log(myproject.getPendingTodos());
 
     t1.toggleComplete()
     console.log('Completed todos:', myproject.getCompletedTodos());
@@ -82,3 +86,4 @@ document.addEventListener('DOMContentLoaded', () => {
 export default function clearContent(){
     document.getElementById('content').innerHTML = '';
 }
+
