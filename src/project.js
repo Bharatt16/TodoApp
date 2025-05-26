@@ -1,77 +1,70 @@
-import {CreateTodo} from './todo.js'
+import { Todo } from './todo.js';
 
 // Array to store all projects
 let projects = [];
 
-export class CreateProject {
-    constructor(name){
-        if (!this.isValidProjectName(name)) {
-            throw new Error('Invalid project name');
-        }
-        this.name = name.trim();
+export class Project {
+    constructor(name) {
+        this.name = name;
         this.todos = [];
-        this.createdAt = new Date();
-        // Add the project to the projects array when created
         projects.push(this);
     }
-    
-    // Validate project name
-    isValidProjectName(name) {
-        return name && typeof name === 'string' && name.trim().length > 0;
-    }
 
-    // Get project name
-    getName() {
-        return this.name;
-    }
-
-    // Update project name
-    updateName(newName) {
-        if (!this.isValidProjectName(newName)) {
-            return false;
-        }
-        // Check if name already exists
-        if (projects.some(p => p.name === newName.trim() && p !== this)) {
-            return false;
-        }
-        this.name = newName.trim();
-        return true;
-    }
-
-    //instance methods for managing todos within a project 
-    addTodo(todo){
-        if(todo instanceof CreateTodo){
+    addTodo(todo) {
+        if (todo instanceof Todo) {
             this.todos.push(todo);
         }
     }
 
-    deleteTodo(index){
-        if(index>=0 && index<this.todos.length){
-            this.todos.splice(index,1);
+    deleteTodo(index) {
+        if (index >= 0 && index < this.todos.length) {
+            this.todos.splice(index, 1);
         }
     }
+}
 
-    getTodo(index){
-        return this.todos[index];
-    }
+// Initialize default projects and todos
+export function initializeDefaultProjects() {
+    if (projects.length === 0) {
+        // Create default project
+        const defaultProject = new Project('My Project');
 
-    getCompletedTodos(){
-        return this.todos.filter(todo => todo.completed);
-    }
+        // Add default todos to the project
+        defaultProject.addTodo(new Todo(
+            'Complete project proposal',
+            'Finish the initial draft of the project proposal',
+            new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            'high'
+        ));
 
-    getPendingTodos(){
-        return this.todos.filter(todo => !todo.completed);
+        defaultProject.addTodo(new Todo(
+            'Team meeting',
+            'Weekly team sync meeting',
+            new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            'medium'
+        ));
+
+        defaultProject.addTodo(new Todo(
+            'Gym workout',
+            'Complete 1-hour workout session',
+            new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            'medium'
+        ));
     }
+}
+
+export function getAllProjects() {
+    return projects;
+}
+
+export function createProject(name) {
+    return new Project(name);
 }
 
 //Regular functions to manage projects 
 export function addProject(name){
-    const project = new CreateProject(name);
+    const project = new Project(name);
     return project;
-}
-
-export function getAllProjects(){
-    return projects;
 }
 
 export function getProject(index){
@@ -102,6 +95,6 @@ export function createProjectFromForm(formData){
     }
     
     // Create new project with trimmed name
-    const project = new CreateProject(name.trim());
+    const project = new Project(name.trim());
     return project;
 }

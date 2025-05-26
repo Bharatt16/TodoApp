@@ -1,5 +1,5 @@
-import { CreateTodo } from './todo.js';
-import { CreateProject, addProject, getAllProjects, createProjectFromForm } from './project.js';
+import { Todo, createTodo } from './todo.js';
+import { Project, getAllProjects, createProject, getAlltodos, initializeDefaultProjects } from './project.js';
 import sun from './images/sun.svg';
 import night from './images/night.svg';
 import { clearContent } from './index.js';
@@ -90,10 +90,11 @@ function displayProjects() {
         const li = document.createElement('li');
         li.textContent = project.name;
         
-        // Add click event to render todos
+        // Add click event to load the project
         li.addEventListener('click', () => {
-            const event = new CustomEvent('projectSelected', { detail: project });
-            document.dispatchEvent(event);
+            loadProject(project);
+            // Close hamburger menu if it's open
+            document.getElementById('hamburgerMenu').style.display = 'none';
         });
         
         projectList.appendChild(li);
@@ -101,166 +102,316 @@ function displayProjects() {
 }
 
 function updateProjectSelect() {
-    const projectSelect = document.getElementById('projectSelect');
-    if (!projectSelect) return;
-
-    // Clear existing options
-    projectSelect.innerHTML = '';
+    const select = document.getElementById('projectSelect');
+    select.innerHTML = '<option value="">Choose a project</option>';
     
-    // Add default option
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Choose a project';
-    projectSelect.appendChild(defaultOption);
-
-    // Add all projects as options
-    const projects = getAllProjects();
-    projects.forEach(project => {
+    getAllProjects().forEach(project => {
         const option = document.createElement('option');
         option.value = project.name;
         option.textContent = project.name;
-        projectSelect.appendChild(option);
+        select.appendChild(option);
     });
 }
 
-function setupEventListener() {
-    // Project dialog event listeners
+function setupEventListeners() {
+    // Project creation
     document.querySelector('#navbtn-1').addEventListener('click', () => {
         document.querySelector('#projectDialog').showModal();
     });
-    
+
+    // Add cancel button listener for project dialog
+    document.querySelector('#projectcancelBtn').addEventListener('click', () => {
+        document.querySelector('#projectDialog').close();
+    });
+
     document.querySelector('#projectDialog form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const project = createProjectFromForm(formData);
-        
-        if (project) {
+        const name = e.target.projectName.value;
+        if (name) {
+            const project = createProject(name);
             document.querySelector('#projectDialog').close();
-            document.getElementById('projectName').value = '';
-            // Update project options and list
-            updateProjectSelect();
-            displayProjects();
-            // Load the project page
-            clearContent();
-            loadProjectPage(project);
-            document.getElementById('hamburgerMenu').style.display = 'none';
-        } else {
-            alert('Please enter a project name');
+            e.target.reset();
+            updateProjectList();
+            loadProject(project);
         }
     });
-    
-    document.querySelector('#projectcancelBtn').addEventListener("click", () => {
-        document.querySelector('#projectDialog').close();
-        document.getElementById('projectName').value = '';
-    });
 
-    // Listen for project selection
-    document.addEventListener('projectSelected', (e) => {
-        clearContent();
-        loadProjectPage(e.detail);
-        document.getElementById('hamburgerMenu').style.display = 'none';
-    });
-
-    // Todo dialog event listeners
+    // Todo creation
     document.querySelector('#navbtn-2').addEventListener('click', () => {
         document.querySelector('#todoDialog').showModal();
-        // Update project options when todo dialog opens
         updateProjectSelect();
     });
-    
-    document.querySelector('#cancelBtn').addEventListener("click", () => {
+
+    // Add cancel button listener for todo dialog
+    document.querySelector('#cancelBtn').addEventListener('click', () => {
         document.querySelector('#todoDialog').close();
-        document.getElementById('title').value = '';
-        document.getElementById('description').value = '';
-        document.getElementById('dueDate').value = '';
-        document.getElementById('priority').value = '';
+    });
+
+    document.querySelector('#todoDialog form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = e.target.title.value;
+        const description = e.target.description.value;
+        const dueDate = e.target.dueDate.value;
+        const priority = e.target.priority.value;
+        const projectName = e.target.projectSelect.value;
+
+        const project = getAllProjects().find(p => p.name === projectName);
+        if (project) {
+            const todo = createTodo(title, description, dueDate, priority);
+            project.addTodo(todo);
+            document.querySelector('#todoDialog').close();
+            e.target.reset();
+            if (currentProject === project) {
+                loadProject(project);
+            }
+        }
     });
 }
 
-function loadHome(todos = []){
+function updateProjectList() {
+    const projectList = document.querySelector('#project-list');
+    projectList.innerHTML = '';
+    
+    getAllProjects().forEach(project => {
+        const li = document.createElement('li');
+        li.textContent = project.name;
+        li.addEventListener('click', () => loadProject(project));
+        projectList.appendChild(li);
+    });
+}
+
+function loadProject(project) {
+    if (!project) return;
+    
+    currentProject = project;
     const content = document.getElementById('content');
+    
     content.innerHTML = `
-        <div class="home-container">
-            <h1>Home Page</h1>
-            <div class="todo-list-container">
-                ${todos.map(todo => `
-                    <div class="todo-item" data-id="${todo.id}">
-                        <div class="todo-content">
-                            <h3 class="todo-title">${todo.title}</h3>
-                            <p class="todo-description">${todo.description || ''}</p>
+        <div class="project-header">
+            <h2>${project.name}</h2>
+            <button class="add-todo-btn" onclick="document.querySelector('#todoDialog').showModal()">
+                Add Todo
+            </button>
+        </div>
+        <div class="todo-list">
+            ${project.todos.map((todo, index) => `
+                <div class="todo-item ${todo.completed ? 'completed' : ''}" data-index="${index}">
+                    <div class="todo-content">
+                        <div class="todo-header">
+                            <h3>${todo.title}</h3>
+                            <span class="priority-badge ${todo.priority.toLowerCase()}">${todo.priority}</span>
                         </div>
-                        <div class="todo-meta">
-                            <span class="todo-date">${todo.dueDate || 'No due date'}</span>
-                            <span class="todo-priority ${todo.priority?.toLowerCase() || 'normal'}">${todo.priority || 'Normal'}</span>
-                            <button class="todo-details-btn">Details</button>
+                        <p class="todo-description">${todo.description}</p>
+                        <div class="todo-footer">
+                            <span class="due-date">
+                                <i class="far fa-calendar"></i>
+                                ${new Date(todo.dueDate).toLocaleDateString()}
+                            </span>
+                            <div class="todo-actions">
+                                <button class="toggle-btn ${todo.completed ? 'completed' : ''}" data-index="${index}">
+                                    ${todo.completed ? '✓' : '○'}
+                                </button>
+                                <button class="delete-btn" data-index="${index}">×</button>
+                            </div>
                         </div>
                     </div>
-                `).join('') || '<p class="no-todos">No todos yet. Add some!</p>'}
+                </div>
+            `).join('') || '<p class="no-todos">No todos yet. Add some!</p>'}
+        </div>
+    `;
+
+    // Add event listeners to todo buttons
+    content.querySelectorAll('.toggle-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const index = parseInt(button.dataset.index);
+            project.todos[index].toggleComplete();
+            loadProject(project);
+        });
+    });
+
+    content.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const index = parseInt(button.dataset.index);
+            project.deleteTodo(index);
+            loadProject(project);
+        });
+    });
+}
+
+function loadHome() {
+    const content = document.getElementById('content');
+    const allProjects = getAllProjects();
+    const allTodos = getAlltodos().filter(todo => !todo.completed);
+    
+    content.innerHTML = `
+        <div class="home-container">
+            <h1>All Active Todos</h1>
+            <div class="todo-list">
+                ${allTodos.map(todo => {
+                    // Find which project this todo belongs to
+                    const project = allProjects.find(p => p.todos.includes(todo));
+                    return `
+                        <div class="todo-item">
+                            <div class="todo-content">
+                                <div class="todo-header">
+                                    <h3>${todo.title}</h3>
+                                    <span class="priority-badge ${todo.priority.toLowerCase()}">${todo.priority}</span>
+                                </div>
+                                <p class="todo-description">${todo.description}</p>
+                                <div class="todo-footer">
+                                    <span class="due-date">
+                                        <i class="far fa-calendar"></i>
+                                        ${new Date(todo.dueDate).toLocaleDateString()}
+                                    </span>
+                                    <span class="project-badge">
+                                        <i class="fas fa-folder"></i>
+                                        ${project ? project.name : 'No Project'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('') || '<p class="no-todos">No active todos</p>'}
             </div>
         </div>
     `;
 }
 
-function loadThisWeek(){
+function loadThisWeek() {
     const content = document.getElementById('content');
+    const allTodos = getAlltodos().filter(todo => !todo.completed);
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    const thisWeekTodos = allTodos.filter(todo => {
+        const todoDate = new Date(todo.dueDate);
+        return todoDate >= today && todoDate <= nextWeek;
+    });
+    
     content.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-            <h1>This Week</h1>
-            <p>This is the This week page content</p>
-        </div>
-    `;
-}
-
-function loadUpcoming(){
-    const content = document.getElementById('content');
-    content.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-            <h1>Upcoming</h1>
-            <p>This is the Upcomming page content</p>
-        </div>
-    `;
-}
-
-function loadOverDue(){
-    const content = document.getElementById('content');
-    content.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-            <h1>Over Due</h1>
-            <p>This is the loadOverDue page content</p>
-        </div>
-    `;
-}
-
-function loadCompleted(){
-    const content = document.getElementById('content');
-    content.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-            <h1>completed</h1>
-            <p>This is the Commpleted page content</p>
-        </div>
-    `;
-}
-
-// Add this new function to load project page
-function loadProjectPage(project) {
-    const content = document.getElementById('content');
-    content.innerHTML = `
-        <div class="project-page">
-            <h1>${project.name}</h1>
-            <div class="todo-list-container">
-                ${project.todos.length > 0 ? project.todos.map(todo => `
-                    <div class="todo-item" data-id="${todo.id}">
+        <div class="home-container">
+            <h1>This Week's Active Todos</h1>
+            <div class="todo-list">
+                ${thisWeekTodos.map(todo => `
+                    <div class="todo-item">
                         <div class="todo-content">
-                            <h3 class="todo-title">${todo.title}</h3>
-                            <p class="todo-description">${todo.description || ''}</p>
-                        </div>
-                        <div class="todo-meta">
-                            <span class="todo-date">${todo.duedate || 'No due date'}</span>
-                            <span class="todo-priority ${todo.priority?.toLowerCase() || 'normal'}">${todo.priority || 'Normal'}</span>
-                            <button class="todo-details-btn">Details</button>
+                            <div class="todo-header">
+                                <h3>${todo.title}</h3>
+                                <span class="priority-badge ${todo.priority.toLowerCase()}">${todo.priority}</span>
+                            </div>
+                            <p class="todo-description">${todo.description}</p>
+                            <div class="todo-footer">
+                                <span class="due-date">
+                                    <i class="far fa-calendar"></i>
+                                    ${new Date(todo.dueDate).toLocaleDateString()}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                `).join('') : '<p class="no-todos">No todos in this project yet. Add some!</p>'}
+                `).join('') || '<p class="no-todos">No active todos for this week</p>'}
+            </div>
+        </div>
+    `;
+}
+
+function loadUpcoming() {
+    const content = document.getElementById('content');
+    const allTodos = getAlltodos().filter(todo => !todo.completed);
+    const today = new Date();
+    
+    const upcomingTodos = allTodos.filter(todo => {
+        const todoDate = new Date(todo.dueDate);
+        return todoDate > today;
+    });
+    
+    content.innerHTML = `
+        <div class="home-container">
+            <h1>Upcoming Active Todos</h1>
+            <div class="todo-list">
+                ${upcomingTodos.map(todo => `
+                    <div class="todo-item">
+                        <div class="todo-content">
+                            <div class="todo-header">
+                                <h3>${todo.title}</h3>
+                                <span class="priority-badge ${todo.priority.toLowerCase()}">${todo.priority}</span>
+                            </div>
+                            <p class="todo-description">${todo.description}</p>
+                            <div class="todo-footer">
+                                <span class="due-date">
+                                    <i class="far fa-calendar"></i>
+                                    ${new Date(todo.dueDate).toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<p class="no-todos">No upcoming active todos</p>'}
+            </div>
+        </div>
+    `;
+}
+
+function loadOverDue() {
+    const content = document.getElementById('content');
+    const allTodos = getAlltodos().filter(todo => !todo.completed);
+    const today = new Date();
+    
+    const overdueTodos = allTodos.filter(todo => {
+        const todoDate = new Date(todo.dueDate);
+        return todoDate < today;
+    });
+    
+    content.innerHTML = `
+        <div class="home-container">
+            <h1>Overdue Active Todos</h1>
+            <div class="todo-list">
+                ${overdueTodos.map(todo => `
+                    <div class="todo-item overdue">
+                        <div class="todo-content">
+                            <div class="todo-header">
+                                <h3>${todo.title}</h3>
+                                <span class="priority-badge ${todo.priority.toLowerCase()}">${todo.priority}</span>
+                            </div>
+                            <p class="todo-description">${todo.description}</p>
+                            <div class="todo-footer">
+                                <span class="due-date">
+                                    <i class="far fa-calendar"></i>
+                                    ${new Date(todo.dueDate).toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<p class="no-todos">No overdue active todos</p>'}
+            </div>
+        </div>
+    `;
+}
+
+function loadCompleted() {
+    const content = document.getElementById('content');
+    const allTodos = getAlltodos();
+    const completedTodos = allTodos.filter(todo => todo.completed);
+    
+    content.innerHTML = `
+        <div class="home-container">
+            <h1>Completed Todos</h1>
+            <div class="todo-list">
+                ${completedTodos.map(todo => `
+                    <div class="todo-item completed">
+                        <div class="todo-content">
+                            <div class="todo-header">
+                                <h3>${todo.title}</h3>
+                                <span class="priority-badge ${todo.priority.toLowerCase()}">${todo.priority}</span>
+                            </div>
+                            <p class="todo-description">${todo.description}</p>
+                            <div class="todo-footer">
+                                <span class="due-date">
+                                    <i class="far fa-calendar"></i>
+                                    ${new Date(todo.dueDate).toLocaleDateString()}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<p class="no-todos">No completed todos</p>'}
             </div>
         </div>
     `;
@@ -268,9 +419,9 @@ function loadProjectPage(project) {
 
 // Call both functions when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    updateProjectSelect();
-    displayProjects();
+    setupEventListeners();
+    updateProjectList();
     // ... rest of your initialization code ...
 });
 
-export { renderTodos, setupEventListener, toggleHamburger, loadHome, loadThisWeek, loadUpcoming, loadOverDue, loadCompleted, toggleTheme, displayProjects, updateProjectSelect, loadProjectPage };
+export { renderTodos, setupEventListeners, toggleHamburger, loadHome, loadThisWeek, loadUpcoming, loadOverDue, loadCompleted, toggleTheme, displayProjects, updateProjectSelect, loadProject };

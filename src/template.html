@@ -42,24 +42,25 @@
       <form method="dialog">
         <div class="titleClass">
           <label for="title">Title</label>
-          <input type="text" id="title" placeholder="Title" required />
+          <input type="text" id="title" name="title" placeholder="Title" required />
         </div>
         <div class="descriptionClass">
           <label for="description">Description</label>
           <input
             type="text"
             id="description"
+            name="description"
             placeholder="Description here .."
             required
           />
         </div>
         <div class="dueDateClass">
           <label for="dueDate">Due Date</label>
-          <input type="date" id="dueDate" required />
+          <input type="date" id="dueDate" name="dueDate" required />
         </div>
         <div class="priorityClass">
           <label for="priority">Priority</label>
-          <select id="priority" required>
+          <select id="priority" name="priority" required>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
@@ -67,7 +68,7 @@
         </div>
         <div class="projectClass">
           <label for="projectSelect">Select Project</label>
-          <select id="projectSelect" required>
+          <select id="projectSelect" name="projectSelect" required>
             <option value="">Choose a project</option>
           </select>
         </div>

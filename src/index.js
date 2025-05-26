@@ -1,7 +1,10 @@
-import { CreateTodo} from './todo';
-import { CreateProject} from './project';
-import { renderTodos, setupEventListener, toggleHamburger, loadHome, loadThisWeek, loadUpcoming, loadOverDue, loadCompleted, toggleTheme } from './dom';
+import { Project } from './project.js';
+import { Todo } from './todo.js';
+import { setupEventListeners, loadProject, updateProjectSelect, displayProjects } from './dom.js';
 import './style.css';
+import { CreateTodo} from './todo';
+import { CreateProject, initializeDefaultProjects, getAllProjects } from './project';
+import { renderTodos, toggleHamburger, loadHome, loadThisWeek, loadUpcoming, loadOverDue, loadCompleted, toggleTheme } from './dom';
 import hamburger from './images/hamburger.svg';
 import odinLogo from './images/odinLogo.png';
 import cross from './images/cross.svg';
@@ -33,16 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     toggleHamburger(crossImg, hamburgerImg);
 
-    // Create initial project and todos
-    const myproject = new CreateProject('My project');
-    const t1 = new CreateTodo('Buy groceries', 'Milk, eggs, bread', '2025-05-25', 'high');
-    const t2 = new CreateTodo('Do laundry', '', '2025-05-22', 'medium');
+    // Initialize default projects
+    initializeDefaultProjects();
 
-    myproject.addTodo(t1);
-    myproject.addTodo(t2);
+    // Update project select dropdown with default project
+    updateProjectSelect();
+
+    // Update project list in sidebar
+    displayProjects();
 
     // Set up event listeners
-    setupEventListener();
+    setupEventListeners();
 
     // Set up navigation
     document.querySelector('#nav-home').addEventListener('click', () => {
@@ -75,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('hamburgerMenu').style.display = 'none';
     });
 
-    // Initial load
+    // Initial load - start with home view
     loadHome();
 });
 

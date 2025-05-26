@@ -1,15 +1,13 @@
-export class CreateTodo {
-    constructor(title, description , duedate , priority , notes='' , checklist=[]){
-        this.title = title ;
-        this.description = description ;
-        this.duedate = duedate;
-        this.priority = priority ;
-        this.notes = notes;
-        this.checklist= checklist ;
+export class Todo {
+    constructor(title, description, dueDate, priority) {
+        this.title = title;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.priority = priority;
         this.completed = false;
     }
 
-    toggleComplete(){
+    toggleComplete() {
         this.completed = !this.completed;
     }
 
@@ -31,15 +29,8 @@ export class CreateTodo {
 }
 
 //Functions for todo management
-export function createTodoFromForm(formData){
-    const title = formData.get('title');
-    const description = formData.get('description');
-    const duedate = formData.get('dueDate');
-    const priority = formData.get('priority');
-    const notes = formData.get('notes'||'');
-    const checklist = formData.get('checklist');
-
-    return new CreateTodo(title,description,duedate,priority,notes,checklist);
+export function createTodo(title, description, dueDate, priority) {
+    return new Todo(title, description, dueDate, priority);
 }
 
 export function getFormattedDate(date){
@@ -57,7 +48,7 @@ export function getPriorityColor(priority){
 
 //Sorting function
 export function sortByDate(todos) {
-    return [...todos].sort((a, b) => new Date(a.duedate) - new Date(b.duedate));
+    return [...todos].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 }
 
 export function sortByPriority(todos) {
