@@ -27,12 +27,10 @@ export class CreateTodo {
         if(index>= 0 && index<this.checklist.length){
             this.checklist.splice(index,1);
         }
-        
     }
 }
 
 //Functions for todo management
-
 export function createTodoFromForm(formData){
     const title = formData.get('title');
     const description = formData.get('description');

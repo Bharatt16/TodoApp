@@ -5,12 +5,39 @@ let projects = [];
 
 export class CreateProject {
     constructor(name){
-        this.name = name;
+        if (!this.isValidProjectName(name)) {
+            throw new Error('Invalid project name');
+        }
+        this.name = name.trim();
         this.todos = [];
+        this.createdAt = new Date();
         // Add the project to the projects array when created
         projects.push(this);
     }
     
+    // Validate project name
+    isValidProjectName(name) {
+        return name && typeof name === 'string' && name.trim().length > 0;
+    }
+
+    // Get project name
+    getName() {
+        return this.name;
+    }
+
+    // Update project name
+    updateName(newName) {
+        if (!this.isValidProjectName(newName)) {
+            return false;
+        }
+        // Check if name already exists
+        if (projects.some(p => p.name === newName.trim() && p !== this)) {
+            return false;
+        }
+        this.name = newName.trim();
+        return true;
+    }
+
     //instance methods for managing todos within a project 
     addTodo(todo){
         if(todo instanceof CreateTodo){
@@ -37,9 +64,10 @@ export class CreateProject {
     }
 }
 
-//Regular functionns to manage projeccts 
+//Regular functions to manage projects 
 export function addProject(name){
-    return new CreateProject(name);
+    const project = new CreateProject(name);
+    return project;
 }
 
 export function getAllProjects(){
@@ -48,6 +76,10 @@ export function getAllProjects(){
 
 export function getProject(index){
     return projects[index];
+}
+
+export function getProjectByName(name) {
+    return projects.find(p => p.name === name.trim());
 }
 
 export function deleteProject(index){
@@ -62,8 +94,14 @@ export function getAlltodos(){
 
 export function createProjectFromForm(formData){
     const name = formData.get('projectName');
-  
     
-    // Create and return new project
-    return new CreateProject(name);
+    // Check if project name already exists
+    if (projects.some(p => p.name === name.trim())) {
+        alert('A project with this name already exists');
+        return null;
+    }
+    
+    // Create new project with trimmed name
+    const project = new CreateProject(name.trim());
+    return project;
 }
