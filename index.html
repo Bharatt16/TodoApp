@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TodoApp</title>
+  <script defer src="main.js"></script></head>
+  <body>
+    <nav>
+      <div class="leftNavContainer">
+        <div class="odin">
+          <p id="odinProjects">The Odin Projects</p>
+        </div>
+      </div>
+      <div class="rightNavContainer">
+        <button id="navbtn-1">Add new project</button>
+        <button id="navbtn-2">Add todo</button>
+      </div>
+    </nav>
+
+    <div id="hamburgerMenu" class="hidden">
+      <ul id="menu-list">
+        <li id="nav-home">Home</li>
+        <li id="nav-week">This week</li>
+        <li id="nav-upcoming">Upcoming</li>
+        <li id="nav-overdue">Over Due</li>
+        <li id="nav-completed">Completed</li>
+        <hr />
+        <ul id="project-list"></ul>
+     </ul>
+             
+    </div>
+
+    <main>
+      <div id="content">
+        <h2 id="project-title">Select a Project</h2>
+        <ul id="todo-list"></ul>
+      </div>
+    </main>
+
+    <dialog id="todoDialog">
+      <form method="dialog">
+        <div class="titleClass">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" placeholder="Title" required />
+        </div>
+        <div class="descriptionClass">
+          <label for="description">Description</label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            placeholder="Description here .."
+            required
+          />
+        </div>
+        <div class="dueDateClass">
+          <label for="dueDate">Due Date</label>
+          <input type="date" id="dueDate" name="dueDate" required />
+        </div>
+        <div class="priorityClass">
+          <label for="priority">Priority</label>
+          <select id="priority" name="priority" required>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="projectClass">
+          <label for="projectSelect">Select Project</label>
+          <select id="projectSelect" name="projectSelect" required>
+            <option value="">Choose a project</option>
+          </select>
+        </div>
+        <div class="buttonClass">
+          <button type="submit">Submit</button>
+          <button type="button" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="projectDialog">
+      <form>
+        <label for="projectName">Project Name</label>
+        <input
+          type="text"
+          id="projectName"
+          name="projectName"
+          placeholder="Project Name"
+          required
+        />
+        <div class="buttonClass">
+          <button type="submit">Submit</button>
+          <button type="button" id="projectcancelBtn">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
